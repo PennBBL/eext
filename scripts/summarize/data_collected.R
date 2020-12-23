@@ -25,6 +25,7 @@ df$bblid <- as.numeric(df$bblid)
 df$scanid <- as.numeric(df$scanid)
 
 df <- df[, c('bblid', 'scanid', 'date', 'datatype', 'nifti', 'Tr', 'Te')]
+#df$datatape <- gsub('\\*', 'star', df$datatape)
 
 # Function to assign session order
 # (assuming, within a subject, that lower number means earlier in time)
@@ -38,9 +39,9 @@ sessionOrder <- function(i) {
 df$session <- sapply(1:nrow(df), sessionOrder)
 
 
-# Summarize Tr and Te for session 1 and 2, T2* sequences
-ses1_Te <- table(df[df$session == 1 & df$datatype == 'T2*', 'Te'])
-ses2_Te <- table(df[df$session == 2 & df$datatype == 'T2*', 'Te'])
+# Summarize Tr and Te for session 1 and 2, T2star sequences
+ses1_Te <- table(df[df$session == 1 & df$datatype == 'T2*' & !is.na(df$datatype), 'Te'])
+ses2_Te <- table(df[df$session == 2 & df$datatype == 'T2*' & !is.na(df$datatype), 'Te'])
 
-ses1_Tr <- table(df[df$session == 1 & df$datatype == 'T2*', 'Tr'])
-ses2_Tr <- table(df[df$session == 2 & df$datatype == 'T2*', 'Tr'])
+ses1_Tr <- table(df[df$session == 1 & df$datatype == 'T2*' & !is.na(df$datatype), 'Tr'])
+ses2_Tr <- table(df[df$session == 2 & df$datatype == 'T2*' & !is.na(df$datatype), 'Tr'])
