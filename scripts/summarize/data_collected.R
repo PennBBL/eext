@@ -4,6 +4,7 @@
 ### December 22, 2020
 
 df <- read.csv('~/Documents/eext/data/eext_collected_12-22-2020.csv')
+df$date <- as.Date(df$date, '%m/%d/%Y')
 
 # Clean up scanid
 df$scanid <- df$seslabel
@@ -23,15 +24,15 @@ df[df$subjlabel == 'PEP05', 'scanid'] <- '21001'
 df$bblid <- as.numeric(df$bblid)
 df$scanid <- as.numeric(df$scanid)
 
-df <- df[, c('bblid', 'scanid', 'datatype', 'nifti')]
+df <- df[, c('bblid', 'scanid', 'date', 'datatype', 'nifti')]
 
 # Function to assign session order
 # (assuming, within a subject, that lower number means earlier in time)
 sessionOrder <- function(i) {
   bblid <- df[i, 'bblid']
-  scanids <- unique(df[df$bblid == bblid, 'scanid'])
-  scanids <- scanids[order(scanids)]
-  which(df[i, 'scanid'] == scanids)
+  dates <- unique(df[df$bblid == bblid, 'date'])
+  dates <- dates[order(dates)]
+  which(df[i, 'date'] == dates)
 }
 
 df$session <- sapply(1:nrow(df), sessionOrder)

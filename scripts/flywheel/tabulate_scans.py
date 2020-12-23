@@ -19,7 +19,7 @@ from datetime import date
 
 fw = flywheel.Client()
 
-studyinfo = {"subjlabel":[], "seslabel":[], "datatype":[], "nifti":[]}
+studyinfo = {"subjlabel":[], "seslabel":[], "datatype":[], "nifti":[], "date":[]}
 proj = fw.lookup("bbl/E-EXT_826854")
 
 # Get all of the data types as keys
@@ -33,15 +33,18 @@ proj = fw.lookup("bbl/E-EXT_826854")
 
 for subj in proj.subjects():
     for ses in subj.sessions():
+        ses = ses.reload()
         for acq in ses.acquisitions():
             if len(acq["files"]) > 1:
                 studyinfo["subjlabel"].append(subj.label)
                 studyinfo["seslabel"].append(ses.label)
                 studyinfo["nifti"].append(acq["files"][1]["name"])
+                studyinfo["date"].append(acq["timestamp"].strftime("%m/%d/%Y"))
                 if "Measurement" in acq['files'][0]['classification'].keys():
                     studyinfo["datatype"].append(acq['files'][0]['classification']['Measurement'][0])
                 else:
                     studyinfo["datatype"].append("NA")
+
 
 
 # Create pandas dataframe
