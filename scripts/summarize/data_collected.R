@@ -1,9 +1,9 @@
 ### This script summarizes the data that has been collected by order of session
 ###
 ### Ellyn Butler
-### December 22, 2020
+### December 22, 2020 - December 23, 2020
 
-df <- read.csv('~/Documents/eext/data/eext_collected_12-22-2020.csv')
+df <- read.csv('~/Documents/eext/data/eext_collected_12-23-2020.csv')
 df$date <- as.Date(df$date, '%m/%d/%Y')
 
 # Clean up scanid
@@ -24,7 +24,7 @@ df[df$subjlabel == 'PEP05', 'scanid'] <- '21001'
 df$bblid <- as.numeric(df$bblid)
 df$scanid <- as.numeric(df$scanid)
 
-df <- df[, c('bblid', 'scanid', 'date', 'datatype', 'nifti')]
+df <- df[, c('bblid', 'scanid', 'date', 'datatype', 'nifti', 'Tr', 'Te')]
 
 # Function to assign session order
 # (assuming, within a subject, that lower number means earlier in time)
@@ -36,3 +36,11 @@ sessionOrder <- function(i) {
 }
 
 df$session <- sapply(1:nrow(df), sessionOrder)
+
+
+# Summarize Tr and Te for session 1 and 2, T2* sequences
+ses1_Te <- table(df[df$session == 1 & df$datatype == 'T2*', 'Te'])
+ses2_Te <- table(df[df$session == 2 & df$datatype == 'T2*', 'Te'])
+
+ses1_Tr <- table(df[df$session == 1 & df$datatype == 'T2*', 'Tr'])
+ses2_Tr <- table(df[df$session == 2 & df$datatype == 'T2*', 'Tr'])
