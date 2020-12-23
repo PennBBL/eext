@@ -25,7 +25,6 @@ df$bblid <- as.numeric(df$bblid)
 df$scanid <- as.numeric(df$scanid)
 
 df <- df[, c('bblid', 'scanid', 'date', 'datatype', 'nifti', 'Tr', 'Te')]
-#df$datatape <- gsub('\\*', 'star', df$datatape)
 
 # Function to assign session order
 # (assuming, within a subject, that lower number means earlier in time)
